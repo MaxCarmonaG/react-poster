@@ -1,14 +1,13 @@
 import { FC, PropsWithChildren } from "react";
 import classes from "./Modal.module.css";
+import { useNavigate } from "react-router-dom";
 
-interface ModalProps {
-  oncClose: () => void;
-}
-
-const Modal: FC<PropsWithChildren<ModalProps>> = ({ children, oncClose }) => {
+const Modal: FC<PropsWithChildren> = ({ children }) => {
+  const navigate = useNavigate();
+  
   return (
     <>
-      <div className={classes.backdrop} onClick={oncClose} />
+      <div className={classes.backdrop} onClick={() => navigate('..')} />
       <dialog open className={classes.modal}>
         {children}
       </dialog>
