@@ -11,7 +11,7 @@ interface PostListProps {
 }
 
 const PostList: FC<PostListProps> = ({ showModal, closeModal }) => {
-  const [posts, setPosts] = useState<PostType[]>(MOCK_DATA);
+  const [posts, setPosts] = useState<PostType[]>([]);
 
   const addPost = (newPost: PostType) => setPosts(prev => [...prev, newPost]);
   
@@ -23,22 +23,23 @@ const PostList: FC<PostListProps> = ({ showModal, closeModal }) => {
           <NewPost onCancel={closeModal} addPost={addPost} />
         </Modal>
       )}
-      <ul className={classes.posts}>
-        {
-          posts.map(({ id, author, body }) =>
-            <Post key={id} author={author} body={body} />)
-        }
-      </ul>
+      {
+        posts.length ? (
+          <ul className={classes.posts}>
+            {
+              posts.map(({ id, author, body }) =>
+                <Post key={id} author={author} body={body} />)
+            }
+          </ul>
+        ) : (
+          <div>
+            <h2>There are no posts yet.</h2>
+            <p>Start adding some!</p>
+          </div>
+        )
+      }
     </>
   );
 };
 
 export default PostList;
-
-const MOCK_DATA = [
-  {
-    id: '11223344',
-    author: 'Max',
-    body: 'React.js is awesome!'
-  }
-];
