@@ -1,9 +1,9 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import classes from './PostList.module.css';
 import Post from "../Post";
 import NewPost from "../NewPost";
 import Modal from "../Modal";
-import { PostType } from "../../types";
+import usePostList from "./usePostList";
 
 interface PostListProps {
   showModal: boolean;
@@ -11,9 +11,7 @@ interface PostListProps {
 }
 
 const PostList: FC<PostListProps> = ({ showModal, closeModal }) => {
-  const [posts, setPosts] = useState<PostType[]>([]);
-
-  const addPost = (newPost: PostType) => setPosts(prev => [...prev, newPost]);
+  const { posts, addPost, isLoading } = usePostList();
   
   return (
     <>
@@ -24,19 +22,24 @@ const PostList: FC<PostListProps> = ({ showModal, closeModal }) => {
         </Modal>
       )}
       {
-        posts.length ? (
-          <ul className={classes.posts}>
-            {
-              posts.map(({ id, author, body }) =>
-                <Post key={id} author={author} body={body} />)
-            }
-          </ul>
+        isLoading ? (
+          <p>Loading posts...</p>
         ) : (
-          <div>
-            <h2>There are no posts yet.</h2>
-            <p>Start adding some!</p>
-          </div>
+          posts.length ? (
+            <ul className={classes.posts}>
+              {
+                posts.map(({ id, author, body }) =>
+                  <Post key={id} author={author} body={body} />)
+              }
+            </ul>
+          ) : (
+            <div>
+              <h2>There are no posts yet.</h2>
+              <p>Start adding some!</p>
+            </div>
+          )
         )
+        
       }
     </>
   );
